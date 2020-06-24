@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title></title>
+  <style>
+    #webgl {
+      /* border: 2px solid pink; */
+    }
+  </style>
+  <script id="vertexShader" type="x-shader/x-vertex">
+    //这部分是顶点着色器
+    //声明一个 attribute 类型的 4 维向量 a_Position
+    attribute vec4 a_Position;
+    void main()
+    {
+      // gl_Position 和 gl_PointSize 是预定义变量，表示顶点位置和大小
+      gl_Position = a_Position;
+      gl_PointSize = 200.0;
+    }
+  </script>
+  <script id="fragmentShader" type="x-shader/x-fragment">
+    //这部分是片段着色器
+    void main()
+    {
+      // gl_FragColor 是预定义变量，表示片段的颜色
+      gl_FragColor = vec4(0.3, 0.6, 0.8, 1.0);
+    }
+  </script>
+  <script>
+    addEventListener("DOMContentLoaded", function () {
+      var webgl = document.getElementById("webgl");
+      // 获取 3D 上下文
+      var gl = webgl.getContext("webgl");
+
+      // 获取顶点着色器的源代码
+      var vertexGLSL = document.getElementById("vertexShader").text;
+
+      // 创建顶点着色器
+      var vertexShader = gl.createShader(gl.VERTEX_SHADER);
+
+      // 设置顶点着色器的源代码
+      gl.shaderSource(vertexShader, vertexGLSL);
+
+      // 编译顶点着色器
+      gl.compileShader(vertexShader);
+
+      // 获取片段着色器的源代码
+      var fragmentGLSL = document.getElementById("fragmentShader").text;
+
+      // 创建片段着色器
+      var fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+
+      // 设置片段着色器的源代码
+      gl.shaderSource(fragmentShader, fragmentGLSL);
+
+      // 编译片段着色器
+      gl.compileShader(fragmentShader);
+
+
+      // 创建着色器程序
+      var program = gl.createProgram();
+
+      // 程序加入顶点着色器
+      gl.attachShader(program, vertexShader);
+
+      // 程序加入片段着色器
+      gl.attachShader(program, fragmentShader);
+
+      // 链接程序
+      gl.linkProgram(program);
+
+      // 启用程序
+      gl.useProgram(program);
+
+      // 获取 attribute 类型变量 a_Position 在内存里的位置
+      var positionAttributeLocation = gl.getAttribLocation(program, "a_Position");
+
+      // 启用对应变量
+      gl.enableVertexAttribArray(positionAttributeLocation)
+
+      // 创建缓冲
+      var positionBuffer = gl.createBuffer()
+
+      // 绑定位置信息缓冲
+      gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer)
+
+      // 通过绑定点向缓冲中存放数据
+      var positions = [
+        0, 0,
+        0, 0.5,
+        0.7, 0,
+      ]
+    
+      // 将数据复制到 GPU 的 positionBuffer 对象上
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW)
+
+      // 告诉属性怎么从positionBuffer中读取数据 (ARRAY_BUFFER)
+      var size = 2;          // 每次迭代运行提取两个单位数据
+      var type = gl.FLOAT;   // 每个单位的数据类型是32位浮点型
+      var normalize = false; // 不需要归一化数据
+      var stride = 0;        // 0 = 移动单位数量 * 每个单位占用内存（sizeof(type)）
+                            // 每次迭代运行运动多少内存到下一个数据开始点
+      var offset = 0;        // 从缓冲起始位置开始读取
+      gl.vertexAttribPointer(positionAttributeLocation, size, type, normalize, stride, offset)
+
+      // WebGL 裁剪空间的 -1 -> +1 分别对应到x轴的 0 -> gl.canvas.width 和y轴的 0 -> gl.canvas.height
+      gl.viewport(0, 0, gl.canvas.width, gl.canvas.height)
+
+      // 将颜色缓冲区的值设置为黑色
+      gl.clearColor(0, 0, 0, 1)
+
+      // 使用颜色缓冲区的值来填充
+      gl.clear(gl.COLOR_BUFFER_BIT)
+
+      // 绘制
+      var primitiveType = gl.TRIANGLES;
+      var offset = 0;
+      var count = 3;
+      gl.drawArrays(primitiveType, offset, count);
+    });
+  </script>
+</head>
+
+<body>
+  <canvas id="webgl" width="800" height="600"></canvas>
+</body>
+
+</html>

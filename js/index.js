@@ -41,12 +41,6 @@ function loadScene() {
   gl.viewport(0, 0, canvas.width, canvas.height);
 
   //    Load the vertex shader that's defined in a separate script
-  //    block at the top of this page.
-  //    More info about shaders: http://en.wikipedia.org/wiki/Shader_Model
-  //    More info about GLSL: http://en.wikipedia.org/wiki/GLSL
-  //    More info about vertex shaders: http://en.wikipedia.org/wiki/Vertex_shader
-
-  //    Grab the script element
   var vertexShaderScript = document.getElementById("shader-vs");
   var vertexShader = gl.createShader(gl.VERTEX_SHADER);
   gl.shaderSource(vertexShader, vertexShaderScript.text);
@@ -58,7 +52,6 @@ function loadScene() {
   }
 
   //    Load the fragment shader that's defined in a separate script
-  //    More info about fragment shaders: http://en.wikipedia.org/wiki/Fragment_shader
   var fragmentShaderScript = document.getElementById("shader-fs");
   var fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
   gl.shaderSource(fragmentShader, fragmentShaderScript.text);
@@ -224,7 +217,6 @@ function loadScene() {
   animate();
   setTimeout(timer, 1500);
 }
-var count = 0;
 var cn = 0;
 
 function animate() {
@@ -270,35 +262,6 @@ function draw() {
 
 // ===================================
 
-function setup1() {
-
-  vertices = [];
-  velThetaArr = [];
-  velRadArr = [];
-  ratio = cw / ch;
-  velocities = [];
-
-  // -------------------------------
-
-  for (var i = 0; i < numLines; i++) {
-
-    var rad = Math.random() * 2 + .5;
-    var theta = Math.random() * Math.PI * 2;
-    var velTheta = Math.random() * Math.PI * 2;
-
-    vertices.push(rad * Math.cos(theta), rad * Math.sin(theta), 1.83);//(Math.random() * 2 - 1)*ratio, Math.random() * 2 - 1, 1.83 );
-    vertices.push(rad * Math.cos(theta), rad * Math.sin(theta), 1.83);
-
-    velocities.push((Math.random() * 2 - 1) * .05, (Math.random() * 2 - 1) * .05, .93 + Math.random() * .02);
-    velThetaArr.push(velTheta);
-    velRadArr.push(rad);
-
-  }
-
-}
-
-// -------------------------------
-
 function setup2() {
 
   vertices = [];
@@ -341,12 +304,9 @@ function setup2() {
 
 // -------------------------------
 
-
-// ===================================
-
 function draw0() {
 
-  var i, n = vertices.length, p, bp;
+  var i, bp;
   var px, py;
   var pTheta;
   var rad;
@@ -354,7 +314,6 @@ function draw0() {
   var targetX, targetY;
 
   for (i = 0; i < numLines * 2; i += 2) {
-    count += .3;
     bp = i * 3;
 
     vertices[bp] = vertices[bp + 3];
@@ -381,8 +340,7 @@ function draw0() {
 // -------------------------------
 
 function draw1() {
-
-  var i, n = vertices.length, p, bp;
+  var i, bp;
   var px, py;
   var pTheta;
   var rad;
@@ -390,7 +348,6 @@ function draw1() {
   var targetX, targetY;
 
   for (i = 0; i < numLines * 2; i += 2) {
-    count += .3;
     bp = i * 3;
 
     vertices[bp] = vertices[bp + 3];
@@ -423,14 +380,13 @@ function draw1() {
 function draw2() {
   cn += .1;
 
-  var i, n = vertices.length, p, bp;
+  var i, bp;
   var px, py;
   var pTheta;
   var rad;
   var num;
 
   for (i = 0; i < numLines * 2; i += 2) {
-    count += .3;
     bp = i * 3;
     // copy old positions
 
@@ -460,7 +416,6 @@ function draw2() {
 }
 
 // -------------------------------
-
 
 function timer() {
   drawType = (drawType + 1) % 3;
